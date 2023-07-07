@@ -218,6 +218,9 @@ void work(std::filesystem::directory_entry directory_entry)
 
 int main()
 {
+	FolderWriter::name("Objects");
+	FolderWriter::name("Results");
+
     std::ios::sync_with_stdio(false);
 
 	for (std::filesystem::directory_entry directory_entry : std::filesystem::directory_iterator("Objects"))
