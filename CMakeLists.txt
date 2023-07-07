@@ -13,7 +13,7 @@ add_executable(ColladaParser
 
 target_include_directories(ColladaParser
     PUBLIC
-    ../../Library/CPP/Math
+    ../SE-Library/CPP/Math
     src)
 
 target_precompile_headers(ColladaParser PUBLIC "src/stdafx.h")
