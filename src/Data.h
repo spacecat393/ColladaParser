@@ -76,7 +76,7 @@ struct SourceDataType
 	IndexData indexdata;
 
 	std::vector<std::vector<std::vector<int>>> index; // V1
-	std::vector<M4x4> bones_m4x4_vector;
+	// std::vector<M4x4> bones_m4x4_vector;
 	std::vector<std::vector<int>> unpack_index;
 	std::vector<std::vector<float>> pack_positions; // V3
 	std::vector<std::vector<float>> pack_normals; // V3
