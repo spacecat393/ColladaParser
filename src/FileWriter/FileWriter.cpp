@@ -126,11 +126,14 @@ void FileWriter::stringPack(std::vector<std::string>& string_vector, const std::
 
 void FileWriter::unPackBones(SourceDataType& sourcedatatype, const std::string& string, const int& x)
 {
-    std::ofstream file(string, std::ios::binary);
+    FolderWriter::name(string);
 
-    if (file.is_open())
+    int index = 0;
+    std::ofstream file(string + "/" + std::to_string(index), std::ios::binary);
+
+    for (int y = 0; y < sourcedatatype.bones_string_vector_vector_vector[x].size(); ++y)
     {
-        for (int y = 0; y < sourcedatatype.bones_string_vector_vector_vector[x].size(); ++y)
+        if (file.is_open())
         {
             M4x4 bone_m4x4{};
 
@@ -157,35 +160,82 @@ void FileWriter::unPackBones(SourceDataType& sourcedatatype, const std::string& 
                         break;
                     }
                 }
-
-                // if (z < sourcedatatype.bones_string_vector_vector_vector[x][y].size() - 1)
-                // {
-                //     unsigned char byte_unsigned_char = static_cast<unsigned char>(-1);
-                //     file.write(reinterpret_cast<const char*>(&byte_unsigned_char), sizeof(unsigned char));
-                //     // file << " ";
-                // }
-                // else
-                // {
-                //     sourcedatatype.bones_m4x4_vector.push_back(bone_m4x4);
-                //     bone_m4x4 = {};
-                // }
             }
 
-            if (y < sourcedatatype.bones_string_vector_vector_vector[x].size() - 1)
-            {
-                unsigned char byte_unsigned_char = static_cast<unsigned char>(-1);
-                file.write(reinterpret_cast<const char*>(&byte_unsigned_char), sizeof(unsigned char));
-                // file << "\n";
-            }
+            file.close();
+            file.open(string + "/" + std::to_string(index++), std::ios::binary);
         }
+        else
+        {
+            std::printf("FileWriter %s\n", string.c_str());
+        }
+    }
 
-        file.close();
-    }
-    else
-    {
-        std::printf("FileWriter %s\n", string.c_str());
-    }
+    file.close();
 }
+
+// void FileWriter::unPackBones(SourceDataType& sourcedatatype, const std::string& string, const int& x)
+// {
+//     std::ofstream file(string, std::ios::binary);
+
+//     if (file.is_open())
+//     {
+//         for (int y = 0; y < sourcedatatype.bones_string_vector_vector_vector[x].size(); ++y)
+//         {
+//             M4x4 bone_m4x4{};
+
+//             for (int z = 0; z < sourcedatatype.bones_string_vector_vector_vector[x][y].size(); ++z)
+//             {
+//                 for (int w = 0; w < sourcedatatype.joints[x].size(); ++w)
+//                 {
+//                     if (sourcedatatype.bones_string_vector_vector_vector[x][y][z].find(sourcedatatype.joints[x][w]) != std::string::npos)
+//                     {
+//                         M4x4 bindpose_m4x4{};
+//                         // int bindpose_index = w * 16;
+//                         int bindpose_index = 0;
+
+//                         for (float& f : bindpose_m4x4.mat)
+//                         {
+//                             // f = sourcedatatype.bind_poses[x][bindpose_index++];
+//                             f = sourcedatatype.visual_bones_bonedata_vector_vector[x][w].visual_bones_transform_float_vector[bindpose_index++];
+//                         }
+
+//                         bone_m4x4 *= bindpose_m4x4;
+
+//                         file << w;
+
+//                         break;
+//                     }
+//                 }
+
+//                 // if (z < sourcedatatype.bones_string_vector_vector_vector[x][y].size() - 1)
+//                 // {
+//                 //     unsigned char byte_unsigned_char = static_cast<unsigned char>(-1);
+//                 //     file.write(reinterpret_cast<const char*>(&byte_unsigned_char), sizeof(unsigned char));
+//                 //     // file << " ";
+//                 // }
+//                 // else
+//                 // {
+//                 //     sourcedatatype.bones_m4x4_vector.push_back(bone_m4x4);
+//                 //     bone_m4x4 = {};
+//                 // }
+//             }
+
+//             if (y < sourcedatatype.bones_string_vector_vector_vector[x].size() - 1)
+//             {
+//                 unsigned char byte_unsigned_char = static_cast<unsigned char>(-1);
+//                 file.write(reinterpret_cast<const char*>(&byte_unsigned_char), sizeof(unsigned char));
+//                 // file << "\n";
+//             }
+//         }
+
+//         file.close();
+//     }
+//     else
+//     {
+//         std::printf("FileWriter %s\n", string.c_str());
+//     }
+// }
 
 // void FileWriter::unPackBonesM4x4(SourceDataType& sourcedatatype, const std::string& string, const int& x)
 // {
