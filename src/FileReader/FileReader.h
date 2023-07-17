@@ -14,6 +14,7 @@ public:
     static void getMaxInt(std::istreambuf_iterator<char>& c, const std::string& end_string, std::vector<int>& int_vector, int& max_int);
     static void getNode(std::istreambuf_iterator<char>& c, std::vector<BoneData>& bonedata_vector);
     // static void stringFloat(std::string string, float* value);
+    static void readRawIntFile(const std::string& filename, std::vector<std::vector<int>>& int_2d_vector);
 };
 
 #endif

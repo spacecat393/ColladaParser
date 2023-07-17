@@ -65,8 +65,7 @@ void FileWriter::floatPack(std::vector<float>& float_vector, const std::string& 
     {
         for (int i = 0; i < float_vector.size(); ++i)
         {
-            unsigned char float_unsigned_char = static_cast<unsigned char>(float_vector[i]);
-            file.write(reinterpret_cast<const char*>(&float_unsigned_char), sizeof(unsigned char));
+            file.write(reinterpret_cast<const char*>(&float_vector[i]), sizeof(float));
         }
 
         file.close();
@@ -128,50 +127,28 @@ void FileWriter::unPackBones(SourceDataType& sourcedatatype, const std::string& 
 {
     FolderWriter::name(string);
 
-    int index = 0;
-    std::ofstream file(string + "/" + std::to_string(index), std::ios::binary);
+    std::ofstream file(string + "/" + std::to_string(0), std::ios::binary);
 
     for (int y = 0; y < sourcedatatype.bones_string_vector_vector_vector[x].size(); ++y)
     {
-        if (file.is_open())
+        for (int z = 0; z < sourcedatatype.bones_string_vector_vector_vector[x][y].size(); ++z)
         {
-            M4x4 bone_m4x4{};
-
-            for (int z = 0; z < sourcedatatype.bones_string_vector_vector_vector[x][y].size(); ++z)
+            for (int w = 0; w < sourcedatatype.joints[x].size(); ++w)
             {
-                for (int w = 0; w < sourcedatatype.joints[x].size(); ++w)
+                if (sourcedatatype.bones_string_vector_vector_vector[x][y][z].find(sourcedatatype.joints[x][w]) != std::string::npos)
                 {
-                    if (sourcedatatype.bones_string_vector_vector_vector[x][y][z].find(sourcedatatype.joints[x][w]) != std::string::npos)
-                    {
-                        M4x4 bindpose_m4x4{};
-                        // int bindpose_index = w * 16;
-                        int bindpose_index = 0;
+                    file.write(reinterpret_cast<const char*>(&w), sizeof(int));
 
-                        for (float& f : bindpose_m4x4.mat)
-                        {
-                            // f = sourcedatatype.bind_poses[x][bindpose_index++];
-                            f = sourcedatatype.visual_bones_bonedata_vector_vector[x][w].visual_bones_transform_float_vector[bindpose_index++];
-                        }
-
-                        bone_m4x4 *= bindpose_m4x4;
-
-                        file.write(reinterpret_cast<const char*>(&w), sizeof(int));
-
-                        break;
-                    }
+                    break;
                 }
             }
-
-            file.close();
-
-            if (y < sourcedatatype.bones_string_vector_vector_vector[x].size() - 1)
-            {
-                file.open(string + "/" + std::to_string(index++), std::ios::binary);
-            }
         }
-        else
+
+        file.close();
+
+        if (y < sourcedatatype.bones_string_vector_vector_vector[x].size() - 1)
         {
-            std::printf("FileWriter %s\n", string.c_str());
+            file.open(string + "/" + std::to_string(y + 1), std::ios::binary);
         }
     }
 

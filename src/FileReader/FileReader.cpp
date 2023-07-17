@@ -289,3 +289,43 @@ void FileReader::getNode(std::istreambuf_iterator<char>& c, std::vector<BoneData
 //         std::printf("std::from_chars");
 //     }
 // }
+
+void FileReader::readRawIntFile(const std::string& filename, std::vector<std::vector<int>>& int_2d_vector)
+{
+    std::istreambuf_iterator<char> e;
+
+    std::fstream file(filename);
+    std::istreambuf_iterator<char> c(file);
+    std::vector<char> char_vector;
+    std::vector<int> int_vector;
+
+    while (c != e)
+    {
+        if (*c == '\n')
+        {
+            std::string numbertext(char_vector.begin(), char_vector.end());
+            int_vector.push_back(atoi(numbertext.c_str()));
+            char_vector.clear();
+
+            int_2d_vector.push_back(int_vector);
+            int_vector.clear();
+        }
+        else if (*c != ' ')
+        {
+            char_vector.push_back(*c);
+        }
+        else
+        {
+            std::string numbertext(char_vector.begin(), char_vector.end());
+            int_vector.push_back(atoi(numbertext.c_str()));
+
+            char_vector.clear();
+        }
+
+        ++c;
+    }
+
+    std::string numbertext(char_vector.begin(), char_vector.end());
+    int_vector.push_back(atoi(numbertext.c_str()));
+    int_2d_vector.push_back(int_vector);
+}

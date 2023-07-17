@@ -223,12 +223,28 @@ int main()
 
     std::ios::sync_with_stdio(false);
 
-	for (std::filesystem::directory_entry directory_entry : std::filesystem::directory_iterator("Objects"))
 	{
-		std::thread thread(work, directory_entry);
+		FolderWriter::name("Results/Bones");
 
-		thread.detach();
-		++work_int;
+		std::vector<std::vector<int>> bones_int_2d_vector;
+
+		FileReader::readRawIntFile("Objects/Bones", bones_int_2d_vector);
+
+		for (int i = 0; i < bones_int_2d_vector.size(); ++i)
+		{
+			FileWriter::intPack(bones_int_2d_vector[i], "Results/Bones/" + std::to_string(i));
+		}
+	}
+
+	for (const auto& directory_entry : std::filesystem::directory_iterator("Objects"))
+	{
+		if (directory_entry.is_regular_file() && directory_entry.path() != "Objects/Bones")
+		{
+			std::thread thread(work, directory_entry);
+
+			thread.detach();
+			++work_int;
+		}
 	}
 
 	while (work_int){}
