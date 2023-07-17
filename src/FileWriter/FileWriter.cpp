@@ -155,7 +155,7 @@ void FileWriter::unPackBones(SourceDataType& sourcedatatype, const std::string& 
 
                         bone_m4x4 *= bindpose_m4x4;
 
-                        file << w;
+                        file.write(reinterpret_cast<const char*>(&w), sizeof(int));
 
                         break;
                     }
