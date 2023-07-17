@@ -48,7 +48,7 @@ void FileWriter::modelFile(SourceDataType& sourcedatatype, const std::string& st
 
             FileWriter::floatPack(sourcedatatype.armature_transform_vector, name + sourcedatatype.transforms_name);
             FileWriter::stringPack(sourcedatatype.armature_string_vector, name + sourcedatatype.jointsidentity_name);
-            FileWriter::floatPack(sourcedatatype.armature_time_vector, name + sourcedatatype.times_name);
+            // FileWriter::floatPack(sourcedatatype.armature_time_vector, name + sourcedatatype.times_name);
         }
     }
     else
@@ -163,7 +163,11 @@ void FileWriter::unPackBones(SourceDataType& sourcedatatype, const std::string& 
             }
 
             file.close();
-            file.open(string + "/" + std::to_string(index++), std::ios::binary);
+
+            if (y < sourcedatatype.bones_string_vector_vector_vector[x].size() - 1)
+            {
+                file.open(string + "/" + std::to_string(index++), std::ios::binary);
+            }
         }
         else
         {
