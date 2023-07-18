@@ -22,14 +22,14 @@ struct BoneData
 
 struct SourceDataType
 {
-	const int max_animation_bones = 149;//0
-	const int max_frame = 175;//+1
+	int max_animation_bones = -2;
+	int max_frame;
 	static const bool COMPRESS = true;
 	static const bool CREATE_ANIMATION = true;
 	static const bool FIX_ANIMATION = true;
 	static const bool DECOMPOSED = false;
 	static const bool CREATE_COLOR = false;
-	const char* armature_name = "Armature_";
+	const char* armature_name = "<animation id=\"";
 	const char* vertices_name = "/Vertices";
 	const char* normals_name = "/Normals";
 	const char* texcoord_name = "/Texcoord";

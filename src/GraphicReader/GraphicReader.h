@@ -6,7 +6,7 @@
 class GraphicReader
 {
 public:
-	static std::string repaste(std::string& char_star1, std::string& char_star2, std::string& char_star3);
+	static std::string repaste(std::string& char_star1, const std::string& char_star2, const std::string& char_star3);
 	static int getSpace(std::string& string);
 	static void makeModelOffset(SourceDataType& sourcedatatype);
 	// static void makeAnimation(SourceDataType& sourcedatatype);

@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-std::string GraphicReader::repaste(std::string& char_star1, std::string& char_star2, std::string& char_star3)
+std::string GraphicReader::repaste(std::string& char_star1, const std::string& char_star2, const std::string& char_star3)
 {
 	std::string char_star0;
 

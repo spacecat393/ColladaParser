@@ -8,8 +8,37 @@ void work(std::filesystem::directory_entry directory_entry)
 
 	printf("Load %s%s", directory_entry.path().c_str(), "\n");
 	std::fstream file(directory_entry.path());
-
 	std::istreambuf_iterator<char> char_pointer(file);
+
+	FileReader::find(char_pointer, "<library_animations>");
+
+	std::vector<std::string> string_vector
+	{
+		"</library_animations>",
+		"sourcedatatype.armature_name"
+	};
+
+	while (FileReader::matchString(char_pointer, string_vector))
+	{
+		++sourcedatatype.max_animation_bones;
+	}
+
+	file.seekg(0);
+
+	std::vector<int> int_vector;
+
+	FileReader::find(char_pointer, "<library_animations>");
+	for (int i = 0; i < 3; ++i)
+	{
+		FileReader::find(char_pointer, sourcedatatype.armature_name);
+	}
+	FileReader::find(char_pointer, "count=\"");
+	FileReader::getInt(char_pointer, "\"", int_vector);
+
+	sourcedatatype.max_frame = int_vector[0];
+
+	file.seekg(0);
+
 	FileReader::find(char_pointer, "<library_geometries>");
 
 	{
@@ -216,6 +245,23 @@ void work(std::filesystem::directory_entry directory_entry)
 	--work_int;
 }
 
+void textToBytes(std::filesystem::directory_entry directory_entry, std::string file_name)
+{
+	file_name = GraphicReader::repaste(file_name, "_", "/");
+	FolderWriter::name("Results/" + file_name);
+
+	std::vector<std::vector<int>> bones_int_2d_vector;
+
+	FileReader::readRawIntFile(directory_entry.path(), bones_int_2d_vector);
+
+	for (int i = 0; i < bones_int_2d_vector.size(); ++i)
+	{
+		FileWriter::intPack(bones_int_2d_vector[i], "Results/" + file_name + "/" + std::to_string(i));
+	}
+
+	--work_int;
+}
+
 int main()
 {
 	FolderWriter::name("Objects");
@@ -223,26 +269,22 @@ int main()
 
     std::ios::sync_with_stdio(false);
 
-	{
-		FolderWriter::name("Results/Bones");
-
-		std::vector<std::vector<int>> bones_int_2d_vector;
-
-		FileReader::readRawIntFile("Objects/Bones", bones_int_2d_vector);
-
-		for (int i = 0; i < bones_int_2d_vector.size(); ++i)
-		{
-			FileWriter::intPack(bones_int_2d_vector[i], "Results/Bones/" + std::to_string(i));
-		}
-	}
-
 	for (const auto& directory_entry : std::filesystem::directory_iterator("Objects"))
 	{
-		if (directory_entry.is_regular_file() && directory_entry.path() != "Objects/Bones")
+		if (directory_entry.is_regular_file())
 		{
-			std::thread thread(work, directory_entry);
+			std::string file_name = directory_entry.path().filename();
+			if (file_name.find("_Bones") != std::string::npos)
+			{
+				std::thread thread(textToBytes, directory_entry, file_name);
+				thread.detach();
+			}
+			else
+			{
+				std::thread thread(work, directory_entry);
+				thread.detach();
+			}
 
-			thread.detach();
 			++work_int;
 		}
 	}
