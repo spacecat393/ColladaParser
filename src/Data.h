@@ -22,10 +22,7 @@ struct BoneData
 
 struct SourceDataType
 {
-	int max_animation_bones = -2;
-	int max_frame;
 	static const bool COMPRESS = true;
-	static const bool CREATE_ANIMATION = true;
 	static const bool FIX_ANIMATION = true;
 	static const bool DECOMPOSED = false;
 	static const bool CREATE_COLOR = false;
@@ -47,6 +44,10 @@ struct SourceDataType
 	const char* times_name = "/Times";
 	const char* transforms_name = "/Transforms";
 	const char* visualbones_name = "/VisualBones";
+
+	int max_animation_bones = -2;
+	int max_frame;
+	bool create_animation;
 
 	std::vector<int> max_joint_vector;
 

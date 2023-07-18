@@ -376,7 +376,7 @@ void GraphicReader::compressVertex(SourceDataType& sourcedatatype)
 		}
 	}
 
-	if (SourceDataType::CREATE_ANIMATION)
+	if (sourcedatatype.create_animation)
 	{
 		std::vector<std::vector<int>> joints(sourcedatatype.positions_offset.size());
 		std::vector<std::vector<float>> weights(sourcedatatype.positions_offset.size());
@@ -519,7 +519,7 @@ void GraphicReader::compressVertex(SourceDataType& sourcedatatype)
 					sourcedatatype.pack_color[x].push_back(sourcedatatype.indexdata.color[x][y * 4 + 3]);
 				}
 
-				if (SourceDataType::CREATE_ANIMATION)
+				if (sourcedatatype.create_animation)
 				{
 					for (int z = 0; z < sourcedatatype.max_joint_vector[x]; ++z)
 					{
@@ -584,7 +584,7 @@ bool GraphicReader::canPack(SourceDataType& sourcedatatype, int& x, int& y, int&
 		sourcedatatype.indexdata.normals[x][y * 3 + 2] == sourcedatatype.indexdata.normals[x][z * 3 + 2]
 	)
 	{
-		if (SourceDataType::CREATE_ANIMATION)
+		if (sourcedatatype.create_animation)
 		{
 			for (int w = 0; w < sourcedatatype.max_joint_vector[x]; ++w)
 			{

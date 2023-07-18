@@ -29,7 +29,7 @@ void FileReader::find(std::istreambuf_iterator<char>& c, const std::string& stri
     }
 }
 
-bool FileReader::matchString(std::istreambuf_iterator<char>& c, std::vector<std::string>& string_vector)
+int FileReader::matchString(std::istreambuf_iterator<char>& c, std::vector<std::string>& string_vector)
 {
     std::istreambuf_iterator<char> e;
 

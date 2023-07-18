@@ -22,7 +22,7 @@ void FileWriter::modelFile(SourceDataType& sourcedatatype, const std::string& st
                 FileWriter::floatPack(sourcedatatype.pack_color[i], name + "/" + sourcedatatype.color_name);
             }
 
-            if (SourceDataType::CREATE_ANIMATION)
+            if (sourcedatatype.create_animation)
             {
                 FileWriter::stringPack(sourcedatatype.joints[i], name + "/" + sourcedatatype.jointsidentity_name);
                 FileWriter::floatPack(sourcedatatype.un_pack_visual_bones[i], name + "/" + sourcedatatype.visualbones_name);
@@ -41,7 +41,7 @@ void FileWriter::modelFile(SourceDataType& sourcedatatype, const std::string& st
             }
         }
 
-        if (SourceDataType::CREATE_ANIMATION)
+        if (sourcedatatype.create_animation)
         {
             std::string name = main_name + sourcedatatype.animation_name + "/";
             FolderWriter::name(name);

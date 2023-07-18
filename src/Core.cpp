@@ -10,12 +10,27 @@ void work(std::filesystem::directory_entry directory_entry)
 	std::fstream file(directory_entry.path());
 	std::istreambuf_iterator<char> char_pointer(file);
 
+	{
+		std::vector<std::string> string_vector
+		{
+			"<library_visual_scenes>",
+			"<library_controllers>"
+		};
+
+		if (FileReader::matchString(char_pointer, string_vector))
+		{
+			sourcedatatype.create_animation = true;
+		}
+	}
+
+	file.seekg(0);
+
 	FileReader::find(char_pointer, "<library_animations>");
 
 	std::vector<std::string> string_vector
 	{
 		"</library_animations>",
-		"sourcedatatype.armature_name"
+		sourcedatatype.armature_name
 	};
 
 	while (FileReader::matchString(char_pointer, string_vector))
@@ -28,10 +43,7 @@ void work(std::filesystem::directory_entry directory_entry)
 	std::vector<int> int_vector;
 
 	FileReader::find(char_pointer, "<library_animations>");
-	for (int i = 0; i < 3; ++i)
-	{
-		FileReader::find(char_pointer, sourcedatatype.armature_name);
-	}
+	FileReader::find(char_pointer, sourcedatatype.armature_name);
 	FileReader::find(char_pointer, "count=\"");
 	FileReader::getInt(char_pointer, "\"", int_vector);
 
@@ -94,7 +106,7 @@ void work(std::filesystem::directory_entry directory_entry)
 
 	// Skinning / Animation
 
-	if (SourceDataType::CREATE_ANIMATION)
+	if (sourcedatatype.create_animation)
 	{
 		FileReader::find(char_pointer, "<library_controllers>");
 
@@ -150,43 +162,20 @@ void work(std::filesystem::directory_entry directory_entry)
 		// 	FileReader::findText(char_pointer, sourcedatatype.armature_name);
 		// }
 
-		if (SourceDataType::DECOMPOSED)
-		{
-			for (int i = 0; i < 135; ++i)
-			{
-				FileReader::find(char_pointer, sourcedatatype.armature_name);
-			}
-		}
-		else
-		{
-			for (int i = 0; i < 15; ++i)
-			{
-				FileReader::find(char_pointer, sourcedatatype.armature_name);
-			}
-		}
+		FileReader::find(char_pointer, "</animation>");
 
 		for (int l = 0; l < sourcedatatype.max_animation_bones * (SourceDataType::DECOMPOSED ? 9 : 1); ++l)
 		{
-			for (int i = 0; i < 3; ++i)
-			{
-				FileReader::find(char_pointer, sourcedatatype.armature_name);
-			}
+			FileReader::find(char_pointer, "<float_array");
 			FileReader::find(char_pointer, ">");
 			FileReader::getFloat(char_pointer, "</float_array>", sourcedatatype.armature_time_vector);
 
-			for (int i = 0; i < 3; ++i)
-			{
-				FileReader::find(char_pointer, sourcedatatype.armature_name);
-			}
+			FileReader::find(char_pointer, "<float_array");
 			FileReader::find(char_pointer, ">");
 			FileReader::getFloat(char_pointer, "</float_array>", sourcedatatype.armature_transform_vector);
 
 			FileReader::find(char_pointer, "source=\"#");
 			FileReader::getString(char_pointer, '\"', "\"", sourcedatatype.armature_string_vector);
-			for (int i = 0; i < 9; ++i)//8
-			{
-				FileReader::find(char_pointer, sourcedatatype.armature_name);
-			}
 		}
 
 		//
@@ -198,6 +187,7 @@ void work(std::filesystem::directory_entry directory_entry)
 	}
 
 	// VisualBones
+
 	FileReader::find(char_pointer, "<library_visual_scenes>");
 
 	if (SourceDataType::DECOMPOSED)
@@ -225,7 +215,7 @@ void work(std::filesystem::directory_entry directory_entry)
 	// GraphicReader::makeBonesSpaces(sourcedatatype);
 	GraphicReader::makeBones(sourcedatatype);
 
-	if (SourceDataType::CREATE_ANIMATION && SourceDataType::FIX_ANIMATION)
+	if (sourcedatatype.create_animation && SourceDataType::FIX_ANIMATION)
 	{
 		GraphicReader::fixAnimation(sourcedatatype);
 	}
