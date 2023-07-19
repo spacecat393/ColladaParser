@@ -24,8 +24,8 @@ struct SourceDataType
 {
 	static const bool COMPRESS = true;
 	static const bool FIX_ANIMATION = true;
-	static const bool DECOMPOSED = false;
-	static const bool CREATE_COLOR = false;
+	static const bool DECOMPOSED = false;//no file for test this after use blender 3+ data decomposed won't work correct
+	static const bool CREATE_COLOR = false;//use texture is better
 	const char* armature_name = "<animation id=\"";
 	const char* vertices_name = "/Vertices";
 	const char* normals_name = "/Normals";

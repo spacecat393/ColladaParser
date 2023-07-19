@@ -198,14 +198,11 @@ void GraphicReader::makeBonesSpace(SourceDataType& sourcedatatype)
 		BoneData& bonedata = bonedata_vector[x];
 		std::vector<std::string>& bones_name_string = bonedata.bones_name_string;
 
-		for (int y = 0; y < bones_name_string.size(); ++y)
+		int index = GraphicReader::matchString(node_string, bones_name_string);
+		if (index != -1)
 		{
-			if (bones_name_string[y].find(node_string) != std::string::npos)
-			{
-				int value = GraphicReader::getSpace(bones_name_string[y]);
-				bonedata.space_int = value;
-				break;
-			}
+			int value = GraphicReader::getSpace(bones_name_string[index]);
+			bonedata.space_int = value;
 		}
 	}
 }
@@ -701,4 +698,41 @@ void GraphicReader::updateBones(SourceDataType& sourcedatatype)
 			}
 		}
 	}
+}
+
+int GraphicReader::matchString(const std::string& string, std::vector<std::string>& string_vector)
+{
+    int size = string_vector.size();
+    std::vector<std::string> new_string_vector(size);
+    std::vector<int> index_vector(size);
+	int index = -1;
+
+    for (auto& c : string)
+    {
+        for (int i = 0; i < size; ++i)
+        {
+			for (int l = 0; l < string_vector[i].size(); ++l)
+			{
+				if (c == string_vector[i][l + index_vector[i]])
+				{
+					new_string_vector[i] += c;
+					index_vector[i] += l + 1;
+
+					if (string == new_string_vector[i])
+					{
+						index = i;
+					}
+
+					break;
+				}
+				else
+				{
+					new_string_vector[i].clear();
+					index_vector[i] = 0;
+				}
+			}
+        }
+    }
+
+    return index;
 }
