@@ -235,22 +235,19 @@ void GraphicReader::switchBones(SourceDataType& sourcedatatype)
 		BoneData& bonedata = bonedata_vector[x];
 		std::vector<std::string>& bones_name_string = bonedata.bones_name_string;
 
-		for (int y = 0; y < bones_name_string.size(); ++y)
+		for (int z = 0; z < sourcedatatype.joints.size(); ++z)
 		{
-			for (int z = 0; z < sourcedatatype.joints.size(); ++z)
+			for (int w = 0; w < sourcedatatype.joints[z].size(); ++w)
 			{
-				for (int w = 0; w < sourcedatatype.joints[z].size(); ++w)
+				int index = GraphicReader::matchString(sourcedatatype.joints[z][w], bones_name_string);
+				if (index != -1)
 				{
-					if (bones_name_string[y].find(sourcedatatype.joints[z][w]) != std::string::npos)
-					{
-						BoneData& visual_bones_bonedata = sourcedatatype.visual_bones_bonedata_vector_vector[z][w];
-						visual_bones_bonedata.bones_name_string.push_back(sourcedatatype.joints[z][w]);
-						visual_bones_bonedata.space_int = bonedata.space_int;
-						visual_bones_bonedata.visual_bones_transform_float_vector = bonedata.visual_bones_transform_float_vector;
-						bonedata.bones_name_string.clear();
-						bonedata.bones_name_string.push_back(sourcedatatype.joints[z][w]);
-						break;
-					}
+					BoneData& visual_bones_bonedata = sourcedatatype.visual_bones_bonedata_vector_vector[z][w];
+					visual_bones_bonedata.bones_name_string.push_back(sourcedatatype.joints[z][w]);
+					visual_bones_bonedata.space_int = bonedata.space_int;
+					visual_bones_bonedata.visual_bones_transform_float_vector = bonedata.visual_bones_transform_float_vector;
+					bonedata.bones_name_string.clear();
+					bonedata.bones_name_string.push_back(sourcedatatype.joints[z][w]);
 				}
 			}
 		}
@@ -261,19 +258,14 @@ void GraphicReader::switchAnimationBones(SourceDataType& sourcedatatype)
 {
 	std::vector<std::string>& armature_string_vector = sourcedatatype.armature_string_vector;
 
-	for (int x = 0; x < armature_string_vector.size(); x += (SourceDataType::DECOMPOSED ? 9 : 1))
+	for (int y = 0; y < sourcedatatype.joints.size(); ++y)
 	{
-		std::string& string = armature_string_vector[x];
-
-		for (int y = 0; y < sourcedatatype.joints.size(); ++y)
+		for (int z = 0; z < sourcedatatype.joints[y].size(); ++z)
 		{
-			for (int z = 0; z < sourcedatatype.joints[y].size(); ++z)
+			int index = GraphicReader::matchString(sourcedatatype.joints[y][z], armature_string_vector);
+			if (index != -1)
 			{
-				if (string.find(sourcedatatype.joints[y][z]) != std::string::npos)
-				{
-					string = sourcedatatype.joints[y][z];
-					break;
-				}
+				armature_string_vector[index] = sourcedatatype.joints[y][z];
 			}
 		}
 	}
@@ -314,12 +306,12 @@ void GraphicReader::makeBones(SourceDataType& sourcedatatype)
 			for (int y = 0; y < bonedata_vector.size(); ++y)
 			{
 				BoneData& bonedata = bonedata_vector[y];
-				std::string& bones_name_string = bonedata.bones_name_string[0];
 
-				if (bones_name_string.find(sourcedatatype.joints[x][w]) != std::string::npos)
+				int index = GraphicReader::matchString(sourcedatatype.joints[x][w], bonedata.bones_name_string);
+				if (index != -1)
 				{
 					std::vector<std::string> bones_string_vector;
-					bones_string_vector.push_back(bones_name_string);
+					bones_string_vector.push_back(bonedata.bones_name_string[index]);
 					int max_z = bonedata.space_int;
 
 					for (int z = y; z - 1 > -2; --z)
@@ -332,7 +324,6 @@ void GraphicReader::makeBones(SourceDataType& sourcedatatype)
 					}
 
 					sourcedatatype.bones_string_vector_vector_vector[x].push_back(bones_string_vector);
-					break;
 				}
 			}
 		}
