@@ -25,31 +25,65 @@ void work(std::filesystem::directory_entry directory_entry)
 
 	file.seekg(0);
 
-	FileReader::find(char_pointer, "<library_animations>");
-
-	std::vector<std::string> string_vector
+	if (sourcedatatype.create_animation)
 	{
-		"</library_animations>",
-		sourcedatatype.armature_name
-	};
+		FileReader::find(char_pointer, "<library_animations>");
 
-	while (FileReader::matchString(char_pointer, string_vector))
-	{
-		++sourcedatatype.max_animation_bones;
+		std::vector<std::string> string_vector
+		{
+			"</library_animations>",
+			sourcedatatype.armature_name
+		};
+
+		while (FileReader::matchString(char_pointer, string_vector))
+		{
+			++sourcedatatype.max_animation_bones;
+		}
+
+		file.seekg(0);
+
+		std::vector<int> int_vector;
+
+		FileReader::find(char_pointer, "<library_animations>");
+		FileReader::find(char_pointer, sourcedatatype.armature_name);
+		FileReader::find(char_pointer, "count=\"");
+		FileReader::getInt(char_pointer, "\"", int_vector);
+
+		sourcedatatype.max_frame = int_vector[0];
+
+		file.seekg(0);
+
+		// VisualBones
+
+		FileReader::find(char_pointer, "<library_visual_scenes>");
+
+		if (SourceDataType::DECOMPOSED)
+		{
+			FileReader::find(char_pointer, "</translate>");
+		}
+		else
+		{
+			FileReader::find(char_pointer, "</matrix>");
+		}
+
+		for (int l = 0; l < sourcedatatype.max_animation_bones; ++l)
+		{
+			FileReader::getNode(char_pointer, sourcedatatype.bonedata_vector);
+		}
+		//GraphicReader::repasteBonesName(sourcedatatype.joints);
+		//
+		GraphicReader::makeBonesSpace(sourcedatatype);
+
+		for (int l = 0; l < sourcedatatype.bonedata_vector.size(); ++l)
+		{
+			GraphicReader::repasteBonesName(sourcedatatype.bonedata_vector[l].bones_name_string, " ", ".");
+			GraphicReader::repasteBonesName(sourcedatatype.bonedata_vector[l].bones_name_string, "_", ".");
+		}
+		//
+		// GraphicReader::makeBonesSpaces(sourcedatatype);
+
+		file.seekg(0);
 	}
-
-	file.seekg(0);
-
-	std::vector<int> int_vector;
-
-	FileReader::find(char_pointer, "<library_animations>");
-	FileReader::find(char_pointer, sourcedatatype.armature_name);
-	FileReader::find(char_pointer, "count=\"");
-	FileReader::getInt(char_pointer, "\"", int_vector);
-
-	sourcedatatype.max_frame = int_vector[0];
-
-	file.seekg(0);
 
 	FileReader::find(char_pointer, "<library_geometries>");
 
@@ -99,7 +133,7 @@ void work(std::filesystem::directory_entry directory_entry)
 			++v_index;
 		}
 
-		GraphicReader::repasteBonesName(sourcedatatype.object_name_vector);
+		GraphicReader::repasteBonesName(sourcedatatype.object_name_vector, "_", ".");
 
 		GraphicReader::makeModelOffset(sourcedatatype);
 	}
@@ -148,7 +182,7 @@ void work(std::filesystem::directory_entry directory_entry)
 
 			// Remove library_visual_scenes and unused action
 			//
-			GraphicReader::repasteBonesName(sourcedatatype.joints[v_index]);
+			GraphicReader::repasteBonesName(sourcedatatype.joints[v_index], "_", ".");
 			//
 
 			++v_index;
@@ -179,41 +213,37 @@ void work(std::filesystem::directory_entry directory_entry)
 		}
 
 		//
-		GraphicReader::repasteBonesName(sourcedatatype.armature_string_vector);
+		GraphicReader::repasteBonesName(sourcedatatype.armature_string_vector, "_", ".");
 		//
 		// GraphicReader::makeAnimation(sourcedatatype);
-		GraphicReader::switchAnimationBones(sourcedatatype);
 		// GraphicReader::repasteBonesName(sourcedatatype.armature_string_vector);
-	}
 
-	// VisualBones
 
-	FileReader::find(char_pointer, "<library_visual_scenes>");
+		GraphicReader::makeBones(sourcedatatype);
+		GraphicReader::addParent(sourcedatatype);
+		for (int x = 0; x < sourcedatatype.bones_string_vector_vector_vector.size(); ++x)
+		{
+			for (int y = 0; y < sourcedatatype.bones_string_vector_vector_vector[x].size(); ++y)
+			{
+				for (int z = 0; z < sourcedatatype.bones_string_vector_vector_vector[x][y].size(); ++z)
+				{
+					sourcedatatype.bones_string_vector_vector_vector[x][y][z].clear();
+					sourcedatatype.bones_string_vector_vector_vector[x][y][z].shrink_to_fit();
+				}
+				sourcedatatype.bones_string_vector_vector_vector[x][y].clear();
+				sourcedatatype.bones_string_vector_vector_vector[x][y].shrink_to_fit();
+			}
 
-	if (SourceDataType::DECOMPOSED)
-	{
-		FileReader::find(char_pointer, "</translate>");
-	}
-	else
-	{
-		FileReader::find(char_pointer, "</matrix>");
-	}
+			sourcedatatype.bones_string_vector_vector_vector[x].clear();
+			sourcedatatype.bones_string_vector_vector_vector[x].shrink_to_fit();
+		}
 
-	for (int l = 0; l < sourcedatatype.max_animation_bones; ++l)
-	{
-		FileReader::getNode(char_pointer, sourcedatatype.bonedata_vector);
+		sourcedatatype.bones_string_vector_vector_vector.clear();
+		sourcedatatype.bones_string_vector_vector_vector.shrink_to_fit();
+		GraphicReader::makeBones(sourcedatatype);
+		GraphicReader::switchBones(sourcedatatype);
+		GraphicReader::switchAnimationBones(sourcedatatype);
 	}
-	//GraphicReader::repasteBonesName(sourcedatatype.joints);
-	//
-	for (int l = 0; l < sourcedatatype.bonedata_vector.size(); ++l)
-	{
-		GraphicReader::repasteBonesName(sourcedatatype.bonedata_vector[l].bones_name_string);
-	}
-	//
-	GraphicReader::makeBonesSpace(sourcedatatype);
-	GraphicReader::switchBones(sourcedatatype);
-	// GraphicReader::makeBonesSpaces(sourcedatatype);
-	GraphicReader::makeBones(sourcedatatype);
 
 	if (sourcedatatype.create_animation && SourceDataType::FIX_ANIMATION)
 	{

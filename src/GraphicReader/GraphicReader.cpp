@@ -190,7 +190,7 @@ void GraphicReader::makeModelOffset(SourceDataType& sourcedatatype)
 
 void GraphicReader::makeBonesSpace(SourceDataType& sourcedatatype)
 {
-	std::string node_string = "<node";
+	std::string node_string = " ";
 	std::vector<BoneData>& bonedata_vector = sourcedatatype.bonedata_vector;
 
 	for (int x = 0; x < bonedata_vector.size(); ++x)
@@ -207,11 +207,8 @@ void GraphicReader::makeBonesSpace(SourceDataType& sourcedatatype)
 	}
 }
 
-void GraphicReader::repasteBonesName(std::vector<std::string>& string_vector)
+void GraphicReader::repasteBonesName(std::vector<std::string>& string_vector, const std::string& string0, const std::string& string1)
 {
-	std::string string0 = "_";
-	std::string string1 = ".";
-
 	for (int i = 0; i < string_vector.size(); ++i)
 	{
 		string_vector[i] = GraphicReader::repaste(string_vector[i], string0, string1);
@@ -246,8 +243,8 @@ void GraphicReader::switchBones(SourceDataType& sourcedatatype)
 					visual_bones_bonedata.bones_name_string.push_back(sourcedatatype.joints[z][w]);
 					visual_bones_bonedata.space_int = bonedata.space_int;
 					visual_bones_bonedata.visual_bones_transform_float_vector = bonedata.visual_bones_transform_float_vector;
-					bonedata.bones_name_string.clear();
-					bonedata.bones_name_string.push_back(sourcedatatype.joints[z][w]);
+					// bonedata.bones_name_string.clear();
+					// bonedata.bones_name_string.push_back(sourcedatatype.joints[z][w]);
 				}
 			}
 		}
@@ -324,6 +321,47 @@ void GraphicReader::makeBones(SourceDataType& sourcedatatype)
 					}
 
 					sourcedatatype.bones_string_vector_vector_vector[x].push_back(bones_string_vector);
+				}
+			}
+		}
+	}
+}
+
+void GraphicReader::addParent(SourceDataType& sourcedatatype)
+{
+	for (int x = 0; x < sourcedatatype.joints.size(); ++x)
+	{
+		for (int y = 0; y < sourcedatatype.bones_string_vector_vector_vector[x].size(); ++y)
+		{
+			for (int z = 0; z < sourcedatatype.bones_string_vector_vector_vector[x][y].size(); ++z)
+			{
+				int index = GraphicReader::matchString(sourcedatatype.bones_string_vector_vector_vector[x][y][z], sourcedatatype.joints[x]);
+				if (index == -1)
+				{
+					for (int w = 0; w < sourcedatatype.joints[x].size(); ++w)
+					{
+						if (sourcedatatype.joints[x][w] == sourcedatatype.bones_string_vector_vector_vector[x][y][z])
+						{
+							break;
+						}
+					}
+
+					sourcedatatype.joints[x].push_back(sourcedatatype.bones_string_vector_vector_vector[x][y][z]);
+					sourcedatatype.weights[x].push_back(1.0F);
+					for (int i = 0; i < sourcedatatype.bonedata_vector.size(); ++i)
+					{
+						BoneData& bonedata = sourcedatatype.bonedata_vector[i];
+						int index = GraphicReader::matchString(sourcedatatype.bones_string_vector_vector_vector[x][y][z], bonedata.bones_name_string);
+						if (index != -1)
+						{
+							for (int l = 0; l < 16; ++l)
+							{
+								sourcedatatype.bind_poses[x].push_back(bonedata.visual_bones_transform_float_vector[l]);
+							}
+
+							break;
+						}
+					}
 				}
 			}
 		}

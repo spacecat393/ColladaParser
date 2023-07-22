@@ -11,11 +11,12 @@ public:
 	static void makeModelOffset(SourceDataType& sourcedatatype);
 	// static void makeAnimation(SourceDataType& sourcedatatype);
 	static void makeBonesSpace(SourceDataType& sourcedatatype);
-	static void repasteBonesName(std::vector<std::string>& string_vector);
+	static void repasteBonesName(std::vector<std::string>& string_vector, const std::string& string0, const std::string& string1);
 	static void switchBones(SourceDataType& sourcedatatype);
 	static void switchAnimationBones(SourceDataType& sourcedatatype);
 	// static void makeBonesSpaces(SourceDataType& sourcedatatype);
 	static void makeBones(SourceDataType& sourcedatatype);
+	static void addParent(SourceDataType& sourcedatatype);
 	static void compressVertex(SourceDataType& sourcedatatype);
 	static bool canPackNew(SourceDataType& sourcedatatype, int& x, int& y);
 	static bool canPack(SourceDataType& sourcedatatype, int& x, int& y, int& z);

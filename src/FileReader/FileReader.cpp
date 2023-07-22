@@ -273,6 +273,8 @@ void FileReader::getMaxInt(std::istreambuf_iterator<char>& c, const std::string&
 void FileReader::getNode(std::istreambuf_iterator<char>& c, std::vector<BoneData>& bonedata_vector)
 {
     BoneData bonedata{};
+    FileReader::find(c, "name=\"");
+    FileReader::getString(c, '\n', "\"", bonedata.bones_name_string);
 	FileReader::find(c, "\n");
     FileReader::getString(c, '\n', "<matrix sid=", bonedata.bones_name_string);
 	FileReader::find(c, ">");
