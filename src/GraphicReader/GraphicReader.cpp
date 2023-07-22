@@ -751,10 +751,10 @@ int GraphicReader::matchString(const std::string& string, std::vector<std::strin
 			{
 				new_string_vector[i] += string_vector[i][index_vector[i]];
 
-				// if (string == new_string_vector[i])
-				// {
-				// 	index = i;
-				// }
+				if (string == new_string_vector[i])
+				{
+					index = i;
+				}
 				++c_index;
 			}
 			else
