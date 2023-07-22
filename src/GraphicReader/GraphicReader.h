@@ -24,7 +24,7 @@ public:
 	static void unPackIndex(SourceDataType& sourcedatatype);
 	static void unPackVisualBones(SourceDataType& sourcedatatype);
 	static void updateBones(SourceDataType& sourcedatatype);
-	static int matchString(const std::string& string, std::vector<std::string>& string_vector);
+	static int matchString(const std::string& string, std::vector<std::string>& string_vector, const char& end);
 };
 
 #endif

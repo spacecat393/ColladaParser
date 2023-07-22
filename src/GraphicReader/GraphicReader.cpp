@@ -198,7 +198,7 @@ void GraphicReader::makeBonesSpace(SourceDataType& sourcedatatype)
 		BoneData& bonedata = bonedata_vector[x];
 		std::vector<std::string>& bones_name_string = bonedata.bones_name_string;
 
-		int index = GraphicReader::matchString(node_string, bones_name_string);
+		int index = GraphicReader::matchString(node_string, bones_name_string, '.');
 		if (index != -1)
 		{
 			int value = GraphicReader::getSpace(bones_name_string[index]);
@@ -236,7 +236,7 @@ void GraphicReader::switchBones(SourceDataType& sourcedatatype)
 		{
 			for (int w = 0; w < sourcedatatype.joints[z].size(); ++w)
 			{
-				int index = GraphicReader::matchString(sourcedatatype.joints[z][w], bones_name_string);
+				int index = GraphicReader::matchString(sourcedatatype.joints[z][w], bones_name_string, '.');
 				if (index != -1)
 				{
 					BoneData& visual_bones_bonedata = sourcedatatype.visual_bones_bonedata_vector_vector[z][w];
@@ -259,7 +259,7 @@ void GraphicReader::switchAnimationBones(SourceDataType& sourcedatatype)
 	{
 		for (int z = 0; z < sourcedatatype.joints[y].size(); ++z)
 		{
-			int index = GraphicReader::matchString(sourcedatatype.joints[y][z], armature_string_vector);
+			int index = GraphicReader::matchString(sourcedatatype.joints[y][z], armature_string_vector, '.');
 			if (index != -1)
 			{
 				armature_string_vector[index] = sourcedatatype.joints[y][z];
@@ -304,7 +304,7 @@ void GraphicReader::makeBones(SourceDataType& sourcedatatype)
 			{
 				BoneData& bonedata = bonedata_vector[y];
 
-				int index = GraphicReader::matchString(sourcedatatype.joints[x][w], bonedata.bones_name_string);
+				int index = GraphicReader::matchString(sourcedatatype.joints[x][w], bonedata.bones_name_string, '.');
 				if (index != -1)
 				{
 					std::vector<std::string> bones_string_vector;
@@ -335,7 +335,7 @@ void GraphicReader::addParent(SourceDataType& sourcedatatype)
 		{
 			for (int z = 0; z < sourcedatatype.bones_string_vector_vector_vector[x][y].size(); ++z)
 			{
-				int index = GraphicReader::matchString(sourcedatatype.bones_string_vector_vector_vector[x][y][z], sourcedatatype.joints[x]);
+				int index = GraphicReader::matchString(sourcedatatype.bones_string_vector_vector_vector[x][y][z], sourcedatatype.joints[x], '.');
 				if (index == -1)
 				{
 					for (int w = 0; w < sourcedatatype.joints[x].size(); ++w)
@@ -351,7 +351,7 @@ void GraphicReader::addParent(SourceDataType& sourcedatatype)
 					for (int i = 0; i < sourcedatatype.bonedata_vector.size(); ++i)
 					{
 						BoneData& bonedata = sourcedatatype.bonedata_vector[i];
-						int index = GraphicReader::matchString(sourcedatatype.bones_string_vector_vector_vector[x][y][z], bonedata.bones_name_string);
+						int index = GraphicReader::matchString(sourcedatatype.bones_string_vector_vector_vector[x][y][z], bonedata.bones_name_string, '.');
 						if (index != -1)
 						{
 							for (int l = 0; l < 16; ++l)
@@ -729,39 +729,58 @@ void GraphicReader::updateBones(SourceDataType& sourcedatatype)
 	}
 }
 
-int GraphicReader::matchString(const std::string& string, std::vector<std::string>& string_vector)
+int GraphicReader::matchString(const std::string& string, std::vector<std::string>& string_vector, const char& end)
 {
     int size = string_vector.size();
     std::vector<std::string> new_string_vector(size);
     std::vector<int> index_vector(size);
 	int index = -1;
 
-    for (auto& c : string)
-    {
-        for (int i = 0; i < size; ++i)
-        {
-			for (int l = 0; l < string_vector[i].size(); ++l)
+	for (int i = 0; i < size; ++i)
+	{
+		int c_index = 0;
+
+		while (c_index < string.size() + 1)
+		{
+			if (index_vector[i] >= string_vector[i].size())
 			{
-				if (c == string_vector[i][l + index_vector[i]])
+				break;
+			}
+
+			if (string.size() == c_index)
+			{
+				if (end == string_vector[i][index_vector[i]])
 				{
-					new_string_vector[i] += c;
-					index_vector[i] += l + 1;
-
-					if (string == new_string_vector[i])
-					{
-						index = i;
-					}
-
-					break;
+					index = i;
 				}
 				else
 				{
+					c_index = 0;
 					new_string_vector[i].clear();
-					index_vector[i] = 0;
 				}
 			}
-        }
-    }
+			else
+			{
+				if (string[c_index] == string_vector[i][index_vector[i]])
+				{
+					new_string_vector[i] += string_vector[i][index_vector[i]];
+
+					// if (string == new_string_vector[i])
+					// {
+					// 	index = i;
+					// }
+					++c_index;
+				}
+				else
+				{
+					c_index = 0;
+					new_string_vector[i].clear();
+				}
+			}
+
+			++index_vector[i];
+		}
+	}
 
     return index;
 }
