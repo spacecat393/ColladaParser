@@ -208,8 +208,9 @@ void work(std::filesystem::directory_entry directory_entry)
 			FileReader::find(char_pointer, ">");
 			FileReader::getFloat(char_pointer, "</float_array>", sourcedatatype.armature_transform_vector);
 
-			FileReader::find(char_pointer, "source=\"#");
-			FileReader::getString(char_pointer, '\"', "\"", sourcedatatype.armature_string_vector);
+			FileReader::find(char_pointer, "target=\"");
+			FileReader::getString(char_pointer, '\/', "\/", sourcedatatype.armature_string_vector);
+			sourcedatatype.armature_string_vector[sourcedatatype.armature_string_vector.size() - 1] += '*';
 		}
 
 		//
