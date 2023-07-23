@@ -198,7 +198,7 @@ void GraphicReader::makeBonesSpace(SourceDataType& sourcedatatype)
 		BoneData& bonedata = bonedata_vector[x];
 		std::vector<std::string>& bones_name_string = bonedata.bones_name_string;
 
-		int index = GraphicReader::matchString(node_string, bones_name_string, '.');
+		int index = GraphicReader::matchString(node_string, bones_name_string, ' ');
 		if (index != -1)
 		{
 			int value = GraphicReader::getSpace(bones_name_string[index]);
