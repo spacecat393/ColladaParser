@@ -294,34 +294,37 @@ void GraphicReader::makeBones(SourceDataType& sourcedatatype)
 {
 	std::vector<BoneData>& bonedata_vector = sourcedatatype.bonedata_vector;
 
+	std::vector<std::string> bones_name_string(bonedata_vector.size());
+
+	for (int y = 0; y < bonedata_vector.size(); ++y)
+	{
+		bones_name_string[y] = bonedata_vector[y].bones_name_string[0];
+	}
+
 	for (int x = 0; x < sourcedatatype.joints.size(); ++x)
 	{
 		sourcedatatype.bones_string_vector_vector_vector.push_back({});
 
 		for (int w = 0; w < sourcedatatype.joints[x].size(); ++w)
 		{
-			for (int y = 0; y < bonedata_vector.size(); ++y)
+			int index = GraphicReader::matchString(sourcedatatype.joints[x][w], bones_name_string);
+			if (index != -1)
 			{
-				BoneData& bonedata = bonedata_vector[y];
+				std::vector<std::string> bones_string_vector;
+				BoneData& bonedata = bonedata_vector[index];
+				bones_string_vector.push_back(bonedata.bones_name_string[0]);
+				int max_z = bonedata.space_int;
 
-				int index = GraphicReader::matchString(sourcedatatype.joints[x][w], bonedata.bones_name_string);
-				if (index != -1)
+				for (int z = index; z - 1 > -2; --z)
 				{
-					std::vector<std::string> bones_string_vector;
-					bones_string_vector.push_back(bonedata.bones_name_string[index]);
-					int max_z = bonedata.space_int;
-
-					for (int z = y; z - 1 > -2; --z)
+					if (max_z > bonedata_vector[z].space_int)
 					{
-						if (max_z > bonedata_vector[z].space_int)
-						{
-							max_z = bonedata_vector[z].space_int;
-							bones_string_vector.push_back(bonedata_vector[z].bones_name_string[0]);
-						}
+						max_z = bonedata_vector[z].space_int;
+						bones_string_vector.push_back(bonedata_vector[z].bones_name_string[0]);
 					}
-
-					sourcedatatype.bones_string_vector_vector_vector[x].push_back(bones_string_vector);
 				}
+
+				sourcedatatype.bones_string_vector_vector_vector[x].push_back(bones_string_vector);
 			}
 		}
 	}
