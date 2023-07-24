@@ -198,7 +198,7 @@ void GraphicReader::makeBonesSpace(SourceDataType& sourcedatatype)
 		BoneData& bonedata = bonedata_vector[x];
 		std::vector<std::string>& bones_name_string = bonedata.bones_name_string;
 
-		int index = GraphicReader::matchString(node_string, bones_name_string, ' ');
+		int index = GraphicReader::matchString(node_string, bones_name_string, ' ', ' ');
 		if (index != -1)
 		{
 			int value = GraphicReader::getSpace(bones_name_string[index]);
@@ -259,7 +259,7 @@ void GraphicReader::switchAnimationBones(SourceDataType& sourcedatatype)
 	{
 		for (int z = 0; z < sourcedatatype.joints[y].size(); ++z)
 		{
-			int index = GraphicReader::matchString(sourcedatatype.joints[y][z], armature_string_vector, '*');
+			int index = GraphicReader::matchString(sourcedatatype.joints[y][z], armature_string_vector, '.', '*');
 			if (index != -1)
 			{
 				armature_string_vector[index] = sourcedatatype.joints[y][z];
@@ -712,21 +712,24 @@ void GraphicReader::unPackVisualBones(SourceDataType& sourcedatatype)
 
 void GraphicReader::updateBones(SourceDataType& sourcedatatype)
 {
+	std::vector<std::string> armature_string_vector;
+	for (int i = 0; i < sourcedatatype.armature_string_vector.size(); ++i)
+	{
+		armature_string_vector.push_back("*" + sourcedatatype.armature_string_vector[i] + "*");
+	}
+
 	for (int x = 0; x < sourcedatatype.object_name_vector.size(); ++x)
 	{
 		sourcedatatype.skinning_bones.push_back({});
 		sourcedatatype.animation_bones.push_back({});
 
-		for (int y = 0; y < sourcedatatype.armature_string_vector.size(); ++y)
+		for (int z = 0; z < sourcedatatype.joints[x].size(); ++z)
 		{
-			for (int z = 0; z < sourcedatatype.joints[x].size(); ++z)
+			int index = GraphicReader::matchString(sourcedatatype.joints[x][z], armature_string_vector, '*', '*');
+			if (index != -1)
 			{
-				if (sourcedatatype.armature_string_vector[y].find(sourcedatatype.joints[x][z]) != std::string::npos)
-				{
-					sourcedatatype.skinning_bones[x].push_back(z * 16);
-					sourcedatatype.animation_bones[x].push_back(y * sourcedatatype.max_frame);
-					break;
-				}
+				sourcedatatype.skinning_bones[x].push_back(z * 16);
+				sourcedatatype.animation_bones[x].push_back(index * sourcedatatype.max_frame);
 			}
 		}
 	}
@@ -773,7 +776,7 @@ int GraphicReader::matchString(const std::string& string, std::vector<std::strin
     return index;
 }
 
-int GraphicReader::matchString(const std::string& string, std::vector<std::string>& string_vector, const char& end)
+int GraphicReader::matchString(const std::string& string, std::vector<std::string>& string_vector, const char& start, const char& end)
 {
     int size = string_vector.size();
     std::vector<std::string> new_string_vector(size);
@@ -793,7 +796,7 @@ int GraphicReader::matchString(const std::string& string, std::vector<std::strin
 
 			if (string.size() == c_index)
 			{
-				if (end == string_vector[i][index_vector[i]])
+				if (start == string_vector[i][index_vector[i] - c_index - 1] && end == string_vector[i][index_vector[i]])
 				{
 					index = i;
 				}
