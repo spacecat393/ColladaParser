@@ -131,16 +131,19 @@ void FileWriter::unPackBones(SourceDataType& sourcedatatype, const std::string& 
 
     for (int y = 0; y < sourcedatatype.bones_string_vector_vector_vector[x].size(); ++y)
     {
+        std::vector<std::string> bones_string_vector_vector_vector;
+
         for (int z = 0; z < sourcedatatype.bones_string_vector_vector_vector[x][y].size(); ++z)
         {
-            for (int w = 0; w < sourcedatatype.joints[x].size(); ++w)
-            {
-                if (sourcedatatype.bones_string_vector_vector_vector[x][y][z].find(sourcedatatype.joints[x][w]) != std::string::npos)
-                {
-                    file.write(reinterpret_cast<const char*>(&w), sizeof(int));
+            bones_string_vector_vector_vector.push_back("*" + sourcedatatype.bones_string_vector_vector_vector[x][y][z] + "*");
+        }
 
-                    break;
-                }
+        for (int w = 0; w < sourcedatatype.joints[x].size(); ++w)
+        {
+            int index = GraphicReader::matchString(sourcedatatype.joints[x][w], bones_string_vector_vector_vector, '*', '*');
+            if (index != -1)
+            {
+                file.write(reinterpret_cast<const char*>(&w), sizeof(int));
             }
         }
 
@@ -151,8 +154,6 @@ void FileWriter::unPackBones(SourceDataType& sourcedatatype, const std::string& 
             file.open(string + "/" + std::to_string(y + 1), std::ios::binary);
         }
     }
-
-    file.close();
 }
 
 // void FileWriter::unPackBones(SourceDataType& sourcedatatype, const std::string& string, const int& x)

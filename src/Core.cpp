@@ -220,27 +220,27 @@ void work(std::filesystem::directory_entry directory_entry)
 		// GraphicReader::repasteBonesName(sourcedatatype.armature_string_vector);
 
 
-		GraphicReader::makeBones(sourcedatatype);
-		GraphicReader::addParent(sourcedatatype);
-		for (int x = 0; x < sourcedatatype.bones_string_vector_vector_vector.size(); ++x)
-		{
-			for (int y = 0; y < sourcedatatype.bones_string_vector_vector_vector[x].size(); ++y)
-			{
-				for (int z = 0; z < sourcedatatype.bones_string_vector_vector_vector[x][y].size(); ++z)
-				{
-					sourcedatatype.bones_string_vector_vector_vector[x][y][z].clear();
-					sourcedatatype.bones_string_vector_vector_vector[x][y][z].shrink_to_fit();
-				}
-				sourcedatatype.bones_string_vector_vector_vector[x][y].clear();
-				sourcedatatype.bones_string_vector_vector_vector[x][y].shrink_to_fit();
-			}
+		// GraphicReader::makeBones(sourcedatatype);
+		// GraphicReader::addParent(sourcedatatype);
+		// for (int x = 0; x < sourcedatatype.bones_string_vector_vector_vector.size(); ++x)
+		// {
+		// 	for (int y = 0; y < sourcedatatype.bones_string_vector_vector_vector[x].size(); ++y)
+		// 	{
+		// 		for (int z = 0; z < sourcedatatype.bones_string_vector_vector_vector[x][y].size(); ++z)
+		// 		{
+		// 			sourcedatatype.bones_string_vector_vector_vector[x][y][z].clear();
+		// 			sourcedatatype.bones_string_vector_vector_vector[x][y][z].shrink_to_fit();
+		// 		}
+		// 		sourcedatatype.bones_string_vector_vector_vector[x][y].clear();
+		// 		sourcedatatype.bones_string_vector_vector_vector[x][y].shrink_to_fit();
+		// 	}
 
-			sourcedatatype.bones_string_vector_vector_vector[x].clear();
-			sourcedatatype.bones_string_vector_vector_vector[x].shrink_to_fit();
-		}
+		// 	sourcedatatype.bones_string_vector_vector_vector[x].clear();
+		// 	sourcedatatype.bones_string_vector_vector_vector[x].shrink_to_fit();
+		// }
 
-		sourcedatatype.bones_string_vector_vector_vector.clear();
-		sourcedatatype.bones_string_vector_vector_vector.shrink_to_fit();
+		// sourcedatatype.bones_string_vector_vector_vector.clear();
+		// sourcedatatype.bones_string_vector_vector_vector.shrink_to_fit();
 		GraphicReader::makeBones(sourcedatatype);
 		GraphicReader::switchBones(sourcedatatype);
 		GraphicReader::switchAnimationBones(sourcedatatype);

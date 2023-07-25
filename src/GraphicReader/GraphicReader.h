@@ -16,7 +16,7 @@ public:
 	static void switchAnimationBones(SourceDataType& sourcedatatype);
 	// static void makeBonesSpaces(SourceDataType& sourcedatatype);
 	static void makeBones(SourceDataType& sourcedatatype);
-	static void addParent(SourceDataType& sourcedatatype);
+	// static void addParent(SourceDataType& sourcedatatype);
 	static void compressVertex(SourceDataType& sourcedatatype);
 	static bool canPackNew(SourceDataType& sourcedatatype, int& x, int& y);
 	static bool canPack(SourceDataType& sourcedatatype, int& x, int& y, int& z);
@@ -24,7 +24,7 @@ public:
 	static void unPackIndex(SourceDataType& sourcedatatype);
 	static void unPackVisualBones(SourceDataType& sourcedatatype);
 	static void updateBones(SourceDataType& sourcedatatype);
-	static int matchString(const std::string& string, std::vector<std::string>& string_vector);
+	// static int matchString(const std::string& string, std::vector<std::string>& string_vector);
 	static int matchString(const std::string& string, std::vector<std::string>& string_vector, const char& start, const char& end);
 };
 
