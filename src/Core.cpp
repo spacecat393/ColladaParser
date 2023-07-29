@@ -188,7 +188,8 @@ void work(std::filesystem::directory_entry directory_entry)
 			++v_index;
 		}
 
-		FileReader::find(char_pointer, "<animation");
+		FileReader::find(char_pointer, "name=\"");
+		FileReader::getString(char_pointer, '\"', "\"", sourcedatatype.animation_bone_name_vector);
 		std::istreambuf_iterator<char> empty_pointer;
 
 		// for (int i = 0; i < 15; ++i)//14
@@ -209,8 +210,9 @@ void work(std::filesystem::directory_entry directory_entry)
 			FileReader::getFloat(char_pointer, "</float_array>", sourcedatatype.armature_transform_vector);
 
 			FileReader::find(char_pointer, "target=\"");
+			FileReader::find(char_pointer, sourcedatatype.animation_bone_name_vector[0] + "_");
 			FileReader::getString(char_pointer, '\/', "\/", sourcedatatype.armature_string_vector);
-			sourcedatatype.armature_string_vector[sourcedatatype.armature_string_vector.size() - 1] += '*';
+			sourcedatatype.armature_string_vector[sourcedatatype.armature_string_vector.size() - 1] = "*" + sourcedatatype.armature_string_vector[sourcedatatype.armature_string_vector.size() - 1] + "*";
 		}
 
 		//

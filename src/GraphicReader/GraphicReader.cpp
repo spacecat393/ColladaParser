@@ -274,7 +274,7 @@ void GraphicReader::switchAnimationBones(SourceDataType& sourcedatatype)
 	{
 		for (int z = 0; z < sourcedatatype.joints[y].size(); ++z)
 		{
-			int index = GraphicReader::matchString(sourcedatatype.joints[y][z], armature_string_vector, '.', '*');
+			int index = GraphicReader::matchString(sourcedatatype.joints[y][z], armature_string_vector, '*', '*');
 			if (index != -1)
 			{
 				armature_string_vector[index] = sourcedatatype.joints[y][z];

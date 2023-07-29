@@ -48,6 +48,7 @@ struct SourceDataType
 	int max_animation_bones = -2;
 	int max_frame;
 	bool create_animation;
+	std::vector<std::string> animation_bone_name_vector;
 
 	std::vector<int> max_joint_vector;
 
