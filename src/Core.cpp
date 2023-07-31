@@ -270,9 +270,14 @@ void work(std::filesystem::directory_entry directory_entry)
 
 void textToBytes(std::filesystem::directory_entry directory_entry, std::string file_name)
 {
-	file_name = GraphicReader::repaste(file_name, "_", "/");
-	FolderWriter::name("Results/");
-	// FolderWriter::name("Results/" + file_name);
+	// file_name = GraphicReader::repaste(file_name, "_", "/");
+	size_t underscore_pos = file_name.find("_");
+
+    if (underscore_pos != std::string::npos)
+	{
+        file_name = file_name.substr(0, underscore_pos);
+    }
+	FolderWriter::name("Results/" + file_name);
 
 	std::vector<std::vector<int>> bones_int_2d_vector;
 	std::vector<unsigned char> unsigned_char_vector;
@@ -296,7 +301,7 @@ void textToBytes(std::filesystem::directory_entry directory_entry, std::string f
 	// 	FileWriter::intPack(bones_int_2d_vector[i], "Results/" + file_name + "/" + std::to_string(i));
 	// }
 
-	FileWriter::bytePack(unsigned_char_vector, "Results/" + file_name);
+	FileWriter::bytePack(unsigned_char_vector, "Results/" + file_name + "/IdleBones");
 
 	--work_int;
 }
