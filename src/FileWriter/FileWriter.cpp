@@ -127,6 +127,22 @@ void FileWriter::stringPack(std::vector<std::string>& string_vector, const std::
     }
 }
 
+void FileWriter::bytePack(std::vector<unsigned char>& unsigned_char_vector, const std::string& string)
+{
+    std::ofstream file(string, std::ios::binary);
+
+    if (file.is_open())
+    {
+        file.write(reinterpret_cast<const char*>(unsigned_char_vector.data()), unsigned_char_vector.size());
+
+        file.close();
+    }
+    else
+    {
+        std::printf("FileWriter %s\n", string.c_str());
+    }
+}
+
 void FileWriter::unPackBones(SourceDataType& sourcedatatype, const std::string& string, const int& x)
 {
     FolderWriter::name(string);

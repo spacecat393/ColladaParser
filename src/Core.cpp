@@ -271,16 +271,32 @@ void work(std::filesystem::directory_entry directory_entry)
 void textToBytes(std::filesystem::directory_entry directory_entry, std::string file_name)
 {
 	file_name = GraphicReader::repaste(file_name, "_", "/");
-	FolderWriter::name("Results/" + file_name);
+	FolderWriter::name("Results/");
+	// FolderWriter::name("Results/" + file_name);
 
 	std::vector<std::vector<int>> bones_int_2d_vector;
+	std::vector<unsigned char> unsigned_char_vector;
 
 	FileReader::readRawIntFile(directory_entry.path(), bones_int_2d_vector);
 
 	for (int i = 0; i < bones_int_2d_vector.size(); ++i)
 	{
-		FileWriter::intPack(bones_int_2d_vector[i], "Results/" + file_name + "/" + std::to_string(i));
+		if (bones_int_2d_vector[i][0] == 0)
+		{
+			unsigned_char_vector.push_back(0);
+		}
+		else
+		{
+			unsigned_char_vector.push_back(1);
+		}
 	}
+
+	// for (int i = 0; i < bones_int_2d_vector.size(); ++i)
+	// {
+	// 	FileWriter::intPack(bones_int_2d_vector[i], "Results/" + file_name + "/" + std::to_string(i));
+	// }
+
+	FileWriter::bytePack(unsigned_char_vector, "Results/" + file_name);
 
 	--work_int;
 }
