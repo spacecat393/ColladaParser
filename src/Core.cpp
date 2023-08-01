@@ -257,8 +257,12 @@ void work(std::filesystem::directory_entry directory_entry)
 	{
 		GraphicReader::compressVertex(sourcedatatype);
 		GraphicReader::unPackIndex(sourcedatatype);
-		GraphicReader::unPackVisualBones(sourcedatatype);
-		GraphicReader::updateBones(sourcedatatype);
+
+		if (sourcedatatype.create_animation)
+		{
+			GraphicReader::unPackVisualBones(sourcedatatype);
+			GraphicReader::updateBones(sourcedatatype);
+		}
 	}
 
 	FileWriter::modelFile(sourcedatatype, directory_entry.path().stem());
