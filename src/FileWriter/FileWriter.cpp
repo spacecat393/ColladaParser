@@ -12,28 +12,28 @@ void FileWriter::modelFile(SourceDataType& sourcedatatype, const std::string& st
             std::string name = main_name + sourcedatatype.object_name_vector[i];
             FolderWriter::name(name);
 
-            FileWriter::intPack(sourcedatatype.unpack_index[i], name + "/" + sourcedatatype.index_name);
-            FileWriter::floatPack(sourcedatatype.pack_positions[i], name + "/" + sourcedatatype.vertices_name);
-            // FileWriter::floatPack(sourcedatatype.pack_normals[i], name + "/" + sourcedatatype.normals_name);
-            FileWriter::floatPack(sourcedatatype.pack_texcoord[i], name + "/" + sourcedatatype.texcoord_name);
+            FileWriter::intPack(sourcedatatype.unpack_index[i], name + sourcedatatype.index_name);
+            FileWriter::floatPack(sourcedatatype.pack_positions[i], name + sourcedatatype.vertices_name);
+            // FileWriter::floatPack(sourcedatatype.pack_normals[i], name + sourcedatatype.normals_name);
+            FileWriter::floatPack(sourcedatatype.pack_texcoord[i], name + sourcedatatype.texcoord_name);
 
             if (SourceDataType::CREATE_COLOR)
             {
-                FileWriter::floatPack(sourcedatatype.pack_color[i], name + "/" + sourcedatatype.color_name);
+                FileWriter::floatPack(sourcedatatype.pack_color[i], name + sourcedatatype.color_name);
             }
 
             if (sourcedatatype.create_animation)
             {
-                // FileWriter::stringPack(sourcedatatype.joints[i], name + "/" + sourcedatatype.jointsidentity_name);
-                // FileWriter::floatPack(sourcedatatype.un_pack_visual_bones[i], name + "/" + sourcedatatype.visualbones_name);
+                // FileWriter::stringPack(sourcedatatype.joints[i], name + sourcedatatype.jointsidentity_name);
+                // FileWriter::floatPack(sourcedatatype.un_pack_visual_bones[i], name + sourcedatatype.visualbones_name);
                 // FileWriter::unPackBones(sourcedatatype, name + sourcedatatype.bones_name, i);
                 // FileWriter::unPackBonesM4x4(sourcedatatype, name + sourcedatatype.bones_m4x4_name, i);
 
-                // FileWriter::floatPack(sourcedatatype.bind_poses[i], name + "/" + sourcedatatype.bindposes_name);
-                FileWriter::intPack(sourcedatatype.pack_joints[i], name + "/" + sourcedatatype.joints_name);
-                FileWriter::floatPack(sourcedatatype.pack_weights[i], name + "/" + sourcedatatype.weights_name);
+                // FileWriter::floatPack(sourcedatatype.bind_poses[i], name + sourcedatatype.bindposes_name);
+                FileWriter::intPack(sourcedatatype.pack_joints[i], name + sourcedatatype.joints_name);
+                FileWriter::floatPack(sourcedatatype.pack_weights[i], name + sourcedatatype.weights_name);
 
-                // std::string animation_name = name + sourcedatatype.animation_name + "/";
+                // std::string animation_name = name + sourcedatatype.animation_name;
                 // FolderWriter::name(animation_name);
 
                 // FileWriter::intPack(sourcedatatype.skinning_bones[i], animation_name + sourcedatatype.skinning_bones_name);
@@ -43,12 +43,12 @@ void FileWriter::modelFile(SourceDataType& sourcedatatype, const std::string& st
 
         if (sourcedatatype.create_animation)
         {
-            std::string name = main_name + sourcedatatype.animation_name + "/";
+            std::string name = main_name + sourcedatatype.animation_name;
             FolderWriter::name(name);
 
-            FileWriter::floatPack(sourcedatatype.un_pack_visual_bones[0], name + "/" + sourcedatatype.visualbones_name);
+            FileWriter::floatPack(sourcedatatype.un_pack_visual_bones[0], name + sourcedatatype.visualbones_name);
             FileWriter::unPackBones(sourcedatatype, name + sourcedatatype.bones_name, 0);
-            FileWriter::floatPack(sourcedatatype.bind_poses[0], name + "/" + sourcedatatype.bindposes_name);
+            FileWriter::floatPack(sourcedatatype.bind_poses[0], name + sourcedatatype.bindposes_name);
 
             FileWriter::floatPack(sourcedatatype.armature_transform_vector, name + sourcedatatype.transforms_name);
             FileWriter::stringPack(sourcedatatype.armature_string_vector, name + sourcedatatype.jointsidentity_name);
