@@ -14,7 +14,7 @@ void FileWriter::modelFile(SourceDataType& sourcedatatype, const std::string& st
 
             FileWriter::intPack(sourcedatatype.unpack_index[i], name + sourcedatatype.index_name);
             FileWriter::floatPack(sourcedatatype.pack_positions[i], name + sourcedatatype.vertices_name);
-            // FileWriter::floatPack(sourcedatatype.pack_normals[i], name + sourcedatatype.normals_name);
+            FileWriter::floatPack(sourcedatatype.pack_normals[i], name + sourcedatatype.normals_name);
             FileWriter::floatPack(sourcedatatype.pack_texcoord[i], name + sourcedatatype.texcoord_name);
 
             if (SourceDataType::CREATE_COLOR)
