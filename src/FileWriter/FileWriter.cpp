@@ -46,7 +46,7 @@ void FileWriter::modelFile(SourceDataType& sourcedatatype, const std::string& st
             std::string name = main_name + sourcedatatype.animation_name;
             FolderWriter::name(name);
 
-            FileWriter::floatPack(sourcedatatype.un_pack_visual_bones[0], name + sourcedatatype.visualbones_name);
+            // FileWriter::floatPack(sourcedatatype.un_pack_visual_bones[0], name + sourcedatatype.visualbones_name);
             FileWriter::unPackBones(sourcedatatype, name + sourcedatatype.bones_name, 0);
             FileWriter::floatPack(sourcedatatype.bind_poses[0], name + sourcedatatype.bindposes_name);
 
