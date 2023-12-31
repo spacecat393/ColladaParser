@@ -684,8 +684,8 @@ void GraphicReader::fixAnimation(SourceDataType& sourcedatatype)
 			{
 				int z_index = z * 16;
 
-				M4x4::inverse(sourcedatatype.armature_transform_vector, y_index + z_index);
-				M4x4::inverse(sourcedatatype.armature_transform_vector, y_index + z_index);
+				// M4x4::inverse(sourcedatatype.armature_transform_vector, y_index + z_index);
+				// M4x4::inverse(sourcedatatype.armature_transform_vector, y_index + z_index);
 				sourcedatatype.armature_transform_vector[y_index + 3 + z_index] -= sourcedatatype.bonedata_vector[index].visual_bones_transform_float_vector[3];
 				sourcedatatype.armature_transform_vector[y_index + 7 + z_index] -= sourcedatatype.bonedata_vector[index].visual_bones_transform_float_vector[7];
 				sourcedatatype.armature_transform_vector[y_index + 11 + z_index] -= sourcedatatype.bonedata_vector[index].visual_bones_transform_float_vector[11];
